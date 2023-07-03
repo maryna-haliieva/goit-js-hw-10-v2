@@ -2,6 +2,8 @@ import { fetchBreeds, fetchCatByBreed } from './js/cat-api';
 import { createOptionsMarkup, createInfoMarkup } from './js/markup';
 import { refs } from './js/refs';
 
+import { Notify, Loading } from 'notiflix';
+
 const renderOptions = markup => {
   refs.select.innerHTML = markup;
 };
@@ -11,6 +13,8 @@ const onSelectChange = ev => {
   refs.loader.classList.remove('is-hidden');
   refs.error.classList.add('is-hidden');
 
+  Loading.pulse('Loading...');
+  Loading.remove(500);
   try {
     fetchCatByBreed(id)
       .then(({ data }) => {
@@ -33,7 +37,8 @@ const onSelectChange = ev => {
         refs.error.classList.remove('is-hidden');
       });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
+    Notify.failure('Oops! Something went wrong! Try reloading the page!');
     refs.loader.classList.add('is-hidden');
   }
 };
@@ -56,7 +61,8 @@ try {
     })
     .finally(refs.loader.classList.add('is-hidden'));
 } catch (error) {
-  console.log(error.message);
+  // console.log(error.message);
+  Notify.failure('Oops! Something went wrong! Try reloading the page!');
   refs.loader.classList.add('is-hidden');
 }
 
